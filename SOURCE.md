@@ -10,7 +10,7 @@ This repository now contains its own implementation of provider `roman-temporal`
 - **Local entry:** `src/provider.c`.
 - **Output:** `Ancient Roman Temporal Clock.so`.
 - **Native resource path:** `/System/Resources/Clocks/Ancient Roman Temporal Clock.so`.
-- **Original Common code:** retained unchanged. This is a copy, not a removal or package-ownership transition.
+- **Original Common code:** retained unchanged. The original extraction was a copy, not a removal. Independent packaging now transfers only this installed module through dpkg; Common source remains retained.
 
 Combined source files were selected for this provider and split by keeping its existing operations, data and required helper definitions. Inactive provider branches and unreachable definitions were removed. Shared arithmetic, formatting, localization and runtime-bridge helpers are intentionally copied into every repository that needs them. The local build uses only this repository's source and platform dependencies; it does not fetch or link a Common checkout/archive.
 
@@ -27,7 +27,7 @@ make
 make check
 ```
 
-The build directly creates `build/Ancient Roman Temporal Clock.so`. ICU-backed providers retain the copied runtime ABI bridge and use the host's ICU/CLDR data. No installer or package-ownership change is included in this copy.
+The build directly creates `build/Ancient Roman Temporal Clock.so`. ICU-backed providers retain the copied runtime ABI bridge and use the host's ICU/CLDR data. Independent release and installation tools are now copied into this repository; see `docs/PACKAGING.md`.
 
 ## Recorded checks
 

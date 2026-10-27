@@ -1,0 +1,72 @@
+name: Qualify and publish provider
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: provider-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Install build prerequisites
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential binutils pkg-config libglib2.0-dev libicu-dev python3
+      - name: Build and qualify the portable release and exact native installer
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 packaging/release.py release
+          python3 packaging/check-package.py dist/*.deb portable
+          sudo python3 packaging/check-upgrade.py dist/*.deb
+          installer=$(realpath dist/*.run)
+          "$installer" --help
+          sudo "$installer" --profile aggressive --system-package-mode
+          package=$(python3 -c 'import json; print("infiltrator-" + json.load(open("SOURCE-MANIFEST.json"))["repository"].lower())')
+          test "$(dpkg-query -W -f='${Status}' "$package")" = 'install ok installed'
+          version=$(cat VERSION)
+          test "$(dpkg-query -W -f='${Version}' "$package")" = "$version+native1"
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          manifest = json.loads(Path('SOURCE-MANIFEST.json').read_text())
+          info = (Path('/System/Resources/Documentation') / manifest['repository'] / 'BUILD-INFO').read_text()
+          assert 'Profile: aggressive\n' in info and 'PGO: trained two-pass profile\n' in info
+          library = Path('/System/Resources') / ('Calendars' if manifest['kind'] == 'calendar' else 'Clocks') / (manifest['name'] + '.so')
+          assert 'SHA256: ' + hashlib.sha256(library.read_bytes()).hexdigest() + '\n' in info
+          paths = sorted(Path('dist').iterdir())
+          assert len(paths) == 3
+          contract = {'commit': os.environ['GITHUB_SHA'], 'version': Path('VERSION').read_text().strip(), 'name': manifest['name'],
+                      'assets': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
+          Path('dist/contract.json').write_text(json.dumps(contract, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: provider-qualified-${{ github.sha }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+  publish:
+    needs: qualify
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: provider-qualified-${{ github.sha }}
+          path: release
+      - name: Publish exactly the qualified three assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: python3 packaging/publish.py

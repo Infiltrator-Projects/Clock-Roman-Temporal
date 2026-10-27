@@ -38,3 +38,11 @@ audit-authorities: all
 	LANGUAGE=en_US LC_ALL=C.UTF-8 $(PYTHON) tests/check_accuracy.py "$(TARGET)" --authorities
 clean:
 	rm -rf "$(BUILD_DIR)"
+
+.PHONY: release deb native-deb
+release:
+	$(PYTHON) packaging/release.py release
+deb:
+	$(PYTHON) packaging/release.py deb --profile portable
+native-deb:
+	$(PYTHON) packaging/release.py deb --profile aggressive

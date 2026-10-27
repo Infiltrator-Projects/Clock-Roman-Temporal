@@ -13,11 +13,11 @@
 ## Later independent delivery
 
 - [ ] Extend independent historical/model and environment qualification as required.
-- [ ] Add standalone release automation, versioning and artifact reproducibility evidence.
-- [ ] Create a package/installer with verified upgrade and removal behaviour.
-- [ ] Coordinate any installed package ownership transition as a separate change; Common is intentionally left intact by this task.
+- [x] Add standalone release automation and versioning with deterministic archives.
+- [x] Add one-provider Debian packaging and an aggressive native source installer.
+- [x] Transfer this installed module through dpkg Replaces; retain Common source.
 - [ ] Verify installed consumer integration and publish qualified releases.
 
-The completed work is a source copy and local build/test baseline. It does not remove Common's implementation or complete a package/installer transition.
+Independent delivery is now implemented in `packaging/` and `.github/workflows/release.yml`; qualification evidence and model limits remain in the validation documents.
 
 See [source provenance](../SOURCE.md) and [recorded results](../VALIDATION-RESULTS.json).
