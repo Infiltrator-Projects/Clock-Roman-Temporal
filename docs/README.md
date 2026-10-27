@@ -10,3 +10,7 @@ This repository contains source for exactly one `clock` provider, stable ID `rom
 - [Source copy record](../SOURCE.md) — original revision, local build and copying method.
 - [Source manifest](../SOURCE-MANIFEST.json) — file provenance and hashes.
 - [Recorded results](../VALIDATION-RESULTS.json) — exact checks and tested host.
+
+## Independent forensic audit
+
+See [audit findings](FORENSIC-AUDIT.md) for corrections, numerical-model limits and unresolved authority disagreements. A successful build is not a historical-accuracy certificate.

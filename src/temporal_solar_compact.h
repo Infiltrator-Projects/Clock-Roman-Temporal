@@ -70,10 +70,15 @@ static inline bool temporal_solar_compact_terms(int64_t instant,
         (long double)temporal_solar_mod(instant, INT64_C(86400000000)) /
         3600000000.0L;
     int ordinal;
+    bool leap_year = false;
     long double gamma;
 
-    if (!temporal_solar_day_of_year(instant, &ordinal)) return false;
-    gamma = 2.0L * pi / 365.0L *
+    if (!temporal_solar_day_of_year_with_leap(
+            instant, &ordinal, &leap_year)) return false;
+    /* NOAA's published fractional-year equation explicitly uses 366 in
+     * leap years. A fixed 365 denominator introduces a phase error and a
+     * spurious jump when a leap year rolls into the following January. */
+    gamma = 2.0L * pi / (leap_year ? 366.0L : 365.0L) *
             ((long double)ordinal - 1.0L +
              (utc_hour - 12.0L) / 24.0L);
     if (equation_minutes != NULL)

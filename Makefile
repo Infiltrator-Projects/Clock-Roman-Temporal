@@ -25,7 +25,7 @@ CFLAGS += -std=c11 -fPIC -fvisibility=hidden -ffunction-sections -fdata-sections
     -Wmissing-prototypes -fstack-protector-strong -fno-common \
     -ffile-prefix-map=$(CURDIR)=. -fdebug-prefix-map=$(CURDIR)=.
 LDLIBS += $(DEP_LIBS) -lm -ldl -pthread
-.PHONY: all check clean
+.PHONY: all check audit-authorities clean
 all:
 	@mkdir -p "$(BUILD_DIR)"
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(DEP_CFLAGS) -shared $(SOURCES) \
@@ -33,5 +33,8 @@ all:
 	    $(LDFLAGS) -o "$(TARGET)" $(LDLIBS)
 check: all
 	$(PYTHON) tests/check_provider.py "$(TARGET)"
+	LANGUAGE=en_US LC_ALL=C.UTF-8 $(PYTHON) tests/check_accuracy.py "$(TARGET)"
+audit-authorities: all
+	LANGUAGE=en_US LC_ALL=C.UTF-8 $(PYTHON) tests/check_accuracy.py "$(TARGET)" --authorities
 clean:
 	rm -rf "$(BUILD_DIR)"

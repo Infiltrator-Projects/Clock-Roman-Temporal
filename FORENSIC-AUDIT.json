@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-27",
+  "repository": "Clock-Roman-Temporal",
+  "id": "roman-temporal",
+  "name": "Ancient Roman Temporal Clock",
+  "kind": "clock",
+  "base_commit": "5e89db6255b819e9d225bef81b79405024b051a3",
+  "model_checks": {
+    "repository": "Clock-Roman-Temporal",
+    "id": "roman-temporal",
+    "format_cases": 2800,
+    "format_failures": 0,
+    "tick_cases": 200,
+    "tick_failures": 0
+  },
+  "navigation": null,
+  "external_comparisons": [],
+  "undefined_behavior_and_invariants": {
+    "repository": "Clock-Roman-Temporal",
+    "operations": 6072,
+    "invariant_failures": 0,
+    "exit": 0
+  },
+  "locale_rendering": {
+    "locales": 13,
+    "cases": 156,
+    "failures": 0
+  },
+  "independent_fixture_count": 80,
+  "authority_fixture_count": 0,
+  "corrections": [
+    "NOAA fractional-year phase now uses 366 days in leap years."
+  ],
+  "limitations": [
+    "Numerical model/reconstruction, not an exact historical observing practice or precision ephemeris. See the measured astronomy errors in the full audit.",
+    "Solar events assume a spherical sea-level horizon and standard depression; terrain, weather, and genuine polar no-crossing conditions are outside the reconstruction.",
+    "Finite sampled checks establish only the stated model/ranges. They do not certify every historical region, all translations, every host ICU/CLDR release, or another operating system/architecture."
+  ],
+  "source_changes": [
+    "src/temporal_solar_compact.h"
+  ],
+  "baseline_cases_updated": 2,
+  "references": {
+    "calendrical": "https://reingold.co/calendars.shtml",
+    "convertdate": "https://convertdate.readthedocs.io/",
+    "ICU": "https://unicode-org.github.io/icu/userguide/datetime/calendar/",
+    "NOAA": "https://gml.noaa.gov/grad/solcalc/solareqns.PDF",
+    "USNO": "https://aa.usno.navy.mil/faq/GAST",
+    "NAOJ": "https://eco.mtk.nao.ac.jp/koyomi/wiki/C7F6CCC02FCCEBCCC0A4C8C6FCCAEB.html",
+    "BWC": "https://bahai-library.com/pdf/uhj/uhj_bahai_dates_172-221.pdf",
+    "HKO": "https://www.hko.gov.hk/en/gts/time/conversion.htm",
+    "KASI": "https://astro.kasi.re.kr/life/pageView/5?search_year=2017&search_month=02&search_dp=1&search_check=G",
+    "HijriDate": "https://hijridate.readthedocs.io/en/stable/background.html",
+    "Persian": "https://github.com/unicode-org/icu/blob/main/icu4c/source/i18n/persncal.cpp"
+  }
+}
