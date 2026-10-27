@@ -12,9 +12,11 @@ The clock owns both its notation and next-visible-tick scheduling. Its output ne
 
 ## Status
 
-**Documentation-only:** The runnable provider, tests, current combined resource packaging and release process are still in Libraries/Common. This new repository has not yet been populated with executable source, standalone tests, an installer, or a verified release.
+**Source copied and build verified.** This repository contains the implementation of `roman-temporal`, the supporting code it needs, a one-provider `Makefile` and focused regression fixtures. The copy is based on Common 1.19.78 at `8d60662114e3`; the original Common source remains unchanged.
 
-This repository is intended to become an independently buildable, testable and installable provider, not a duplicate application-specific implementation. Calendar, Files, System Settings and compatible consumers discover executable providers through Common.
+Run `make` to produce `build/Ancient Roman Temporal Clock.so` and `make check` to run this provider's checks. No Common checkout or Common archive is required. The current combined Common package and its installation ownership remain in place; this copy does not introduce an independent installer or release.
+
+See [source provenance and build details](SOURCE.md), [source manifest](SOURCE-MANIFEST.json) and [recorded validation](VALIDATION-RESULTS.json).
 
 ## Documentation
 

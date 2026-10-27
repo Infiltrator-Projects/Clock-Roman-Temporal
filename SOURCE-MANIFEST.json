@@ -1,0 +1,236 @@
+{
+  "kind": "clock",
+  "id": "roman-temporal",
+  "name": "Ancient Roman Temporal Clock",
+  "repository": "Clock-Roman-Temporal",
+  "defines": {
+    "INFILTRATR_TEMPORAL_DISPLAY_NAME": "\"Ancient Roman Temporal Clock\"",
+    "CLOCK_ROMAN": "1"
+  },
+  "entry": "resources/temporal/src/clocks/seasonal-clock.c",
+  "build_dependencies": [],
+  "upstream_repository": "Infiltrator-Projects/Libraries",
+  "upstream_revision": "8d60662114e3052380f6f88ad3cacd9732ae7131",
+  "upstream_version": "1.19.78",
+  "source_copy_only": true,
+  "common_modified": false,
+  "files": [
+    {
+      "path": "include/infiltratr/arithmetic.h",
+      "source_path": "include/infiltratr/arithmetic.h",
+      "source_sha256": "2996d929aa5773100d900082c913eca2ed4cbb4e861489a4072e26cecabda755",
+      "copied_sha256": "2996d929aa5773100d900082c913eca2ed4cbb4e861489a4072e26cecabda755",
+      "selected_definitions": []
+    },
+    {
+      "path": "include/infiltratr/compiler.h",
+      "source_path": "include/infiltratr/compiler.h",
+      "source_sha256": "de6a07988f74cf61f9bc7d7e19ed689a2d867272220a0ea3cda75e411e85d45b",
+      "copied_sha256": "de6a07988f74cf61f9bc7d7e19ed689a2d867272220a0ea3cda75e411e85d45b",
+      "selected_definitions": [
+        "INFILTRATR_UNLIKELY"
+      ]
+    },
+    {
+      "path": "include/infiltratr/core.h",
+      "source_path": "include/infiltratr/core.h",
+      "source_sha256": "597cbae9f966d8bb59d0ed7afa969d331d6f9140e06b748c53b5793ab2804ba0",
+      "copied_sha256": "597cbae9f966d8bb59d0ed7afa969d331d6f9140e06b748c53b5793ab2804ba0",
+      "selected_definitions": []
+    },
+    {
+      "path": "include/infiltratr/i18n.h",
+      "source_path": "include/infiltratr/i18n.h",
+      "source_sha256": "e61e2329d1baa011a82a588d0d22950a8711d23eaba911b308782aad85a65d4a",
+      "copied_sha256": "e61e2329d1baa011a82a588d0d22950a8711d23eaba911b308782aad85a65d4a",
+      "selected_definitions": [
+        "INFILTRATR_I18N_LOCALE_CAPACITY"
+      ]
+    },
+    {
+      "path": "include/infiltratr/temporal.h",
+      "source_path": "include/infiltratr/temporal.h",
+      "source_sha256": "bf212e14f7c553ce7b6f36c552ab696dcdedeebed3a61fe34b45b39881e3f539",
+      "copied_sha256": "bf212e14f7c553ce7b6f36c552ab696dcdedeebed3a61fe34b45b39881e3f539",
+      "selected_definitions": []
+    },
+    {
+      "path": "include/infiltratr/temporal_clock_resource.h",
+      "source_path": "include/infiltratr/temporal_clock_resource.h",
+      "source_sha256": "ea9f8fe70f59b7c7518668f5a12c4a1b8595da2fe61587f84e67fdb23c28671f",
+      "copied_sha256": "ea9f8fe70f59b7c7518668f5a12c4a1b8595da2fe61587f84e67fdb23c28671f",
+      "selected_definitions": [
+        "INFILTRATR_TEMPORAL_CLOCK_PROVIDER_ABI"
+      ]
+    },
+    {
+      "path": "include/infiltratr/temporal_resource.h",
+      "source_path": "include/infiltratr/temporal_resource.h",
+      "source_sha256": "7ce225d7b2c6721b7d56fc152f68c4c680f6a7d068db26a5942fe2f3b583512d",
+      "copied_sha256": "7ce225d7b2c6721b7d56fc152f68c4c680f6a7d068db26a5942fe2f3b583512d",
+      "selected_definitions": []
+    },
+    {
+      "path": "include/infiltratr/temporal_runtime.h",
+      "source_path": "include/infiltratr/temporal_runtime.h",
+      "source_sha256": "6b5c52a266b53b5ceaafe048532c282a7e96fe64c3a1381a13c35c161629ba67",
+      "copied_sha256": "6b5c52a266b53b5ceaafe048532c282a7e96fe64c3a1381a13c35c161629ba67",
+      "selected_definitions": [
+        "INFILTRATR_TEMPORAL_RESOURCE_METADATA_ABI"
+      ]
+    },
+    {
+      "path": "include/infiltratr/timing.h",
+      "source_path": "include/infiltratr/timing.h",
+      "source_sha256": "896f287ea9b03b30f7a995be3442bc020a6cccff8a5ba9a98390aa48e428642b",
+      "copied_sha256": "896f287ea9b03b30f7a995be3442bc020a6cccff8a5ba9a98390aa48e428642b",
+      "selected_definitions": []
+    },
+    {
+      "path": "include/infiltratr/token.h",
+      "source_path": "include/infiltratr/token.h",
+      "source_sha256": "a1f058b6a9c3c64a716bc5ca577f7dbf9d2bed3dca4f60f093c20c5bba5f474d",
+      "copied_sha256": "a1f058b6a9c3c64a716bc5ca577f7dbf9d2bed3dca4f60f093c20c5bba5f474d",
+      "selected_definitions": []
+    },
+    {
+      "path": "src/provider.c",
+      "source_path": "resources/temporal/src/clocks/seasonal-clock.c",
+      "source_sha256": "9fe2f5e417ff95b46bdabef9e97e33369e182eb369238bfc9d6ac3626a574b81",
+      "copied_sha256": "59d71e81e075c692d17453586bb9631311adc0f1d30e823cdb305e98d7c8bdd5",
+      "selected_definitions": [
+        "CLOCK_CATALOG",
+        "CLOCK_ID",
+        "CLOCK_LOCATION",
+        "CLOCK_REMAINING_WORDS",
+        "CLOCK_SECONDS",
+        "INFILTRATR_PI",
+        "MICROSECONDS_PER_DAY",
+        "MICROSECONDS_PER_SECOND",
+        "RESOURCE_EXPORT",
+        "SECONDS_PER_DAY",
+        "apparent_solar_seconds",
+        "clock_catalogs",
+        "clock_de",
+        "clock_en",
+        "clock_es",
+        "clock_fr",
+        "clock_it",
+        "clock_ja",
+        "clock_pt",
+        "clock_ru",
+        "clock_zh",
+        "clock_zh_hant",
+        "finish_output",
+        "format_clock_mode",
+        "infiltratr_temporal_clock_provider_v1",
+        "infiltratr_temporal_resource_metadata_v1",
+        "mean_solar_seconds",
+        "metadata",
+        "mode_location_valid",
+        "next_tick",
+        "positive_modulo",
+        "provider",
+        "render",
+        "seasonal_format_clock_mode",
+        "seasonal_format_clock_mode_localized",
+        "seasonal_period_at",
+        "solar_day_boundaries",
+        "write_text"
+      ]
+    },
+    {
+      "path": "src/arithmetic.c",
+      "source_path": "src/arithmetic.c",
+      "source_sha256": "091424ec46debe738acee7ac700ea2026ea108598807f04ae0282d4cd3d7cab9",
+      "copied_sha256": "62ee49a59fcdfa20251a47a3c3c117b9b39a3314313ceea81b4498a289c48cd4",
+      "selected_definitions": [
+        "infiltratr_i64_floor_divmod"
+      ]
+    },
+    {
+      "path": "src/ascii_internal.h",
+      "source_path": "src/ascii_internal.h",
+      "source_sha256": "100ab0e1b7ac7d73a81d16f31cc0cef08e278a2a492ee5ba2a5cf97011a9631d",
+      "copied_sha256": "100ab0e1b7ac7d73a81d16f31cc0cef08e278a2a492ee5ba2a5cf97011a9631d",
+      "selected_definitions": [
+        "infiltratr_ascii_alnum",
+        "infiltratr_ascii_alpha",
+        "infiltratr_ascii_digit",
+        "infiltratr_ascii_lower",
+        "infiltratr_ascii_upper"
+      ]
+    },
+    {
+      "path": "src/core.c",
+      "source_path": "src/core.c",
+      "source_sha256": "482e4ea026ab865e377de52693194c0faaf916b0b42ae894b16a579e296a8b9a",
+      "copied_sha256": "a9bd54f92a99861e5b7dcd8acf27790ba34caf6d91a6d24022c9fbb582651bed",
+      "selected_definitions": [
+        "infiltratr_copy_string"
+      ]
+    },
+    {
+      "path": "src/i18n.c",
+      "source_path": "src/i18n.c",
+      "source_sha256": "6811392000186eb753f4b6a6f1ab34bc3c9a8a6a601297d547279d9a274ca9b6",
+      "copied_sha256": "30fb8b724e782cef4f51f6dbf4c1fe02c884956a16f0e25c21ccf4cae4ffa405",
+      "selected_definitions": [
+        "catalog_lookup",
+        "catalog_table_valid",
+        "find_catalog_exact",
+        "find_catalog_language",
+        "infiltratr_i18n_get",
+        "infiltratr_i18n_init",
+        "infiltratr_i18n_set_locale",
+        "language_length",
+        "lookup_locale",
+        "normalise_locale",
+        "same_language"
+      ]
+    },
+    {
+      "path": "src/temporal_solar_compact.h",
+      "source_path": "src/temporal_solar_compact.h",
+      "source_sha256": "164057e1c73ba9f2c43397b335db9ffff12db12b43fa97d7c8d6aa0abe5e6f59",
+      "copied_sha256": "164057e1c73ba9f2c43397b335db9ffff12db12b43fa97d7c8d6aa0abe5e6f59",
+      "selected_definitions": [
+        "temporal_solar_clamp_coordinate",
+        "temporal_solar_clamp_latitude",
+        "temporal_solar_clamp_longitude",
+        "temporal_solar_compact_terms",
+        "temporal_solar_day_of_year",
+        "temporal_solar_day_of_year_with_leap",
+        "temporal_solar_floor_div",
+        "temporal_solar_hour_angle",
+        "temporal_solar_mod"
+      ]
+    },
+    {
+      "path": "exports.map",
+      "source_path": "resources/temporal/src/clocks/clock-resource.map",
+      "source_sha256": "9bf9b9889241eebe70cd530d26465d281465da79ea4bb633d67f8831036696af",
+      "copied_sha256": "9bf9b9889241eebe70cd530d26465d281465da79ea4bb633d67f8831036696af",
+      "selected_definitions": []
+    },
+    {
+      "path": "LICENSE",
+      "source_path": "LICENSE",
+      "source_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "copied_sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "selected_definitions": []
+    }
+  ],
+  "copy_method": "Select this provider in the original conditional source, specialize private dispatch branches, retain reachable provider/helper definitions, and copy the transitive local headers. Original functions and data remain attributed to Common.",
+  "verification": {
+    "repository": "Clock-Roman-Temporal",
+    "compared_observations": 608,
+    "retained_fixtures": 84,
+    "exports": [
+      "infiltratr_temporal_clock_provider_v1",
+      "infiltratr_temporal_resource_metadata_v1"
+    ],
+    "abi_identical": true,
+    "behaviour_identical": true
+  }
+}

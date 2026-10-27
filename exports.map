@@ -1,0 +1,6 @@
+CLOCK_RESOURCE_1 {
+    global:
+        infiltratr_temporal_resource_metadata_v1;
+        infiltratr_temporal_clock_provider_v1;
+    local: *;
+};

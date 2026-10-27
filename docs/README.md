@@ -1,11 +1,12 @@
 # Ancient Roman Temporal Clock — documentation index
 
-The following Markdown documents describe the resource's model and the **planned** independent repository boundaries. They do not certify a completed migration.
+This repository contains source for exactly one `clock` provider, stable ID `roman-temporal`. The Common original is retained.
 
-- [Overview](../README.md) — role, identity, current status and source links.
-- [Model](MODEL.md) — mathematical interpretation, historical range and failure semantics.
-- [Architecture](ARCHITECTURE.md) — source ownership, native ABI, dependencies and package ownership.
-- [Validation](VALIDATION.md) — acceptance checks and required evidence.
-- [Roadmap](ROADMAP.md) — steps from this documentation baseline to a release.
-
-**Document authority:** executable source/tests in Common determine present behaviour; qualified independent artifacts will determine later release readiness. Historical claims must remain constrained to the cited model and fidelity audit.
+- [Overview](../README.md) — identity, model, current status and source links.
+- [Model](MODEL.md) — maintained interpretation and fidelity boundaries.
+- [Architecture](ARCHITECTURE.md) — local source, helpers and native ABI.
+- [Validation](VALIDATION.md) — completed copy checks and remaining qualification.
+- [Roadmap](ROADMAP.md) — copy baseline and later packaging/release work.
+- [Source copy record](../SOURCE.md) — original revision, local build and copying method.
+- [Source manifest](../SOURCE-MANIFEST.json) — file provenance and hashes.
+- [Recorded results](../VALIDATION-RESULTS.json) — exact checks and tested host.
