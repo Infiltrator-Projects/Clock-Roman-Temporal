@@ -12,7 +12,7 @@
   "upstream_repository": "Infiltrator-Projects/Libraries",
   "upstream_revision": "8d60662114e3052380f6f88ad3cacd9732ae7131",
   "upstream_version": "1.19.78",
-  "source_copy_only": true,
+  "source_copy_only": false,
   "common_modified": false,
   "files": [
     {
@@ -221,7 +221,7 @@
       "selected_definitions": []
     }
   ],
-  "copy_method": "Select this provider in the original conditional source, specialize private dispatch branches, retain reachable provider/helper definitions, and copy the transitive local headers. Original functions and data remain attributed to Common.",
+  "copy_method": "Historical Common extraction retained for provenance, not compiled. Provider-only stronger solar mechanics stay local.",
   "verification": {
     "repository": "Clock-Roman-Temporal",
     "compared_observations": 608,
@@ -232,5 +232,12 @@
     ],
     "abi_identical": true,
     "behaviour_identical": true
+  },
+  "common_dependency": {
+    "type": "git-submodule",
+    "path": "common",
+    "revision": "dc4aac326964ca4400b6e21851d16eea674040c8",
+    "version": "1.19.80",
+    "linkage": "static"
   }
 }
