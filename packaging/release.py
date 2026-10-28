@@ -45,6 +45,8 @@ def source_files():
         directories[:] = sorted(d for d in directories if d not in EXCLUDED)
         for name in sorted(names):
             path = Path(folder) / name
+            if name == ".git":
+                continue
             if path.is_symlink():
                 raise ValueError("Source symlinks are not supported: " + str(path))
             if name.endswith((".pyc", ".deb", ".run", ".zip", ".gcda", ".gcno")):
@@ -114,6 +116,8 @@ def compile_provider(profile, jobs):
     # Environment CFLAGS retain the Makefile's mandatory ABI/security flags.
     # A command-line CFLAGS assignment would discard its += additions.
     def make(extra):
+        if any(flag.startswith("-fprofile-use=") for flag in extra):
+            shutil.rmtree(build / "common", ignore_errors=True)
         env["CFLAGS"] = shlex.join(flags + extra)
         env["LDFLAGS"] = shlex.join(["-flto", "-Wl,-z,relro,-z,now", *extra])
         env.pop("CPPFLAGS", None)
