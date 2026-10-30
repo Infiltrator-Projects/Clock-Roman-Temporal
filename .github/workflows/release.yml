@@ -1,4 +1,4 @@
-name: Qualify and publish provider
+name: Qualify and publish native clock resource
 on:
   push:
     branches: [main]
@@ -13,48 +13,37 @@ concurrency:
 jobs:
   qualify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           submodules: recursive
-      - name: Install build prerequisites
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential binutils pkg-config libglib2.0-dev libicu-dev python3 python3-reportlab
-      - name: Build and qualify the portable release and exact native installer
+      - name: Install native build prerequisites
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential binutils pkg-config libglib2.0-dev libicu-dev jq ghostscript zip
+      - name: Forbid Python source and validate native artefacts
         shell: bash
         run: |
           set -euo pipefail
-          python3 packaging/release.py release
-          python3 packaging/check-package.py dist/*.deb portable
-          sudo python3 packaging/check-upgrade.py dist/*.deb
-          installer=$(realpath dist/*.run)
-          "$installer" --help
-          sudo "$installer" --profile aggressive --system-package-mode
-          package=$(python3 -c 'import json; print("infiltrator-" + json.load(open("SOURCE-MANIFEST.json"))["repository"].lower())')
+          if find . -name '*.py' -not -path './common/*' | grep -q .; then echo 'Python code prohibited in clocks' >&2; exit 1; fi
+          bash common/clock-tools/build.sh release
+          deb=(dist/*.deb)
+          bash common/clock-tools/check-package.sh "${deb[0]}" portable
+          sudo bash common/clock-tools/check-upgrade.sh "${deb[0]}"
+          run=(dist/*.run)
+          "$(realpath "${run[0]}")" --help
+          sudo "$(realpath "${run[0]}")" --profile aggressive --system-package-mode
+          package=$(jq -r '"infiltrator-" + (.repository | ascii_downcase)' SOURCE-MANIFEST.json)
           test "$(dpkg-query -W -f='${Status}' "$package")" = 'install ok installed'
-          version=$(cat VERSION)
-          test "$(dpkg-query -W -f='${Version}' "$package")" = "$version+native1"
-          python3 - <<'PY'
-          import hashlib, json, os
-          from pathlib import Path
-          manifest = json.loads(Path('SOURCE-MANIFEST.json').read_text())
-          library = Path('/System/Resources') / ('Calendars' if manifest['kind'] == 'calendar' else 'Clocks') / (manifest['name'] + '.so')
-          guide = Path('/System/Resources/Documentation') / manifest['repository'] / (manifest['name'] + '.pdf')
-          assert guide.is_file() and guide.read_bytes().startswith(b'%PDF-')
-          assert not (guide.parent / 'BUILD-INFO').exists()
-          import subprocess
-          package = 'infiltrator-' + manifest['repository'].lower()
-          def field(key):
-              return subprocess.check_output(['dpkg-query', '-W', '-f=${' + key + '}', package], text=True).strip()
-          assert field('X-Infiltrator-Native-Profile') == 'aggressive'
-          assert field('X-Infiltrator-PGO') == 'trained-two-pass'
-          assert field('X-Infiltrator-Resource-SHA256') == hashlib.sha256(library.read_bytes()).hexdigest()
-          paths = sorted(Path('dist').iterdir())
-          assert len(paths) == 3
-          contract = {'commit': os.environ['GITHUB_SHA'], 'version': Path('VERSION').read_text().strip(), 'name': manifest['name'],
-                      'assets': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
-          Path('dist/contract.json').write_text(json.dumps(contract, indent=2) + '\n')
-          PY
+          test "$(dpkg-query -W -f='${Version}' "$package")" = "$(cat VERSION)+native1"
+          name=$(jq -r '.name' SOURCE-MANIFEST.json)
+          repo=$(jq -r '.repository' SOURCE-MANIFEST.json)
+          test -f "/System/Resources/Clocks/$name.so"
+          test -f "/System/Resources/Documentation/$repo/$name.pdf"
+          test "$(dpkg-query -W -f='${X-Infiltrator-PGO}' "$package")" = 'trained-two-pass'
+          test "$(dpkg-query -W -f='${X-Infiltrator-Resource-SHA256}' "$package")" = "$(sha256sum "/System/Resources/Clocks/$name.so" | cut -d' ' -f1)"
+          test "$(find dist -maxdepth 1 -type f | wc -l)" -eq 3
+          jq -n --arg sha "$GITHUB_SHA" --arg version "$(cat VERSION)" --arg name "$name" --slurpfile assets <(for f in dist/*.deb dist/*.run dist/*.zip; do jq -n --arg file "$(basename "$f")" --arg hash "$(sha256sum "$f" | cut -d' ' -f1)" '{($file):$hash}'; done | jq -s 'add') \
+            '{commit:$sha,version:$version,name:$name,assets:$assets[0]}' > dist/contract.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: provider-qualified-${{ github.sha }}
@@ -76,8 +65,8 @@ jobs:
         with:
           name: provider-qualified-${{ github.sha }}
           path: release
-      - name: Publish exactly the qualified three assets
+      - name: Publish qualified artifacts without Python
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: python3 packaging/publish.py
+        run: bash common/clock-tools/publish.sh

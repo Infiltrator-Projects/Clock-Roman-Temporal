@@ -3,11 +3,10 @@
 .DEFAULT_GOAL := all
 CC ?= cc
 PKG_CONFIG ?= pkg-config
-PYTHON ?= python3
 BUILD_DIR ?= build
 RESOURCE_NAME := Ancient Roman Temporal Clock
 COMMON_DIR := common
-COMMON_REVISION := dc4aac326964ca4400b6e21851d16eea674040c8
+COMMON_REVISION := 67139783bc1b87bd365d9d1a1948ca2e3c485228
 COMMON_VERSION := 1.19.80
 COMMON_BUILD_DIR := $(abspath $(BUILD_DIR))/common
 COMMON_ARCHIVE := $(COMMON_BUILD_DIR)/libinfiltratr-common.a
@@ -46,17 +45,16 @@ all: $(COMMON_ARCHIVE)
 	    -Wl,--version-script=exports.map -Wl,-z,defs -Wl,--gc-sections \
 	    $(LDFLAGS) -o "$(TARGET)" $(LDLIBS)
 check: all
-	$(PYTHON) tests/check_provider.py "$(TARGET)"
-	LANGUAGE=en_US LC_ALL=C.UTF-8 $(PYTHON) tests/check_accuracy.py "$(TARGET)"
+	bash common/clock-tools/check.sh "$(TARGET)"
 audit-authorities: all
-	LANGUAGE=en_US LC_ALL=C.UTF-8 $(PYTHON) tests/check_accuracy.py "$(TARGET)" --authorities
+	bash common/clock-tools/check.sh "$(TARGET)" --authorities
 clean:
 	rm -rf "$(BUILD_DIR)"
 
 .PHONY: release deb native-deb
 release:
-	$(PYTHON) packaging/release.py release
+	bash common/clock-tools/build.sh release
 deb:
-	$(PYTHON) packaging/release.py deb --profile portable
+	bash common/clock-tools/build.sh deb --profile portable
 native-deb:
-	$(PYTHON) packaging/release.py deb --profile aggressive
+	bash common/clock-tools/build.sh deb --profile aggressive
