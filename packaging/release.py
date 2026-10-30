@@ -72,6 +72,9 @@ def epoch():
 
 def check_requirements():
     missing = [x for x in ("gcc", "make", "pkg-config", "dpkg", "dpkg-deb", "readelf", "strip") if not shutil.which(x)]
+    if subprocess.run([sys.executable, "-c", "import reportlab"], stdout=subprocess.DEVNULL,
+                      stderr=subprocess.DEVNULL).returncode != 0:
+        missing.append("python3-reportlab")
     dependencies = MANIFEST["build_dependencies"]
     if not missing and dependencies:
         if subprocess.run(["pkg-config", "--exists", *dependencies]).returncode:
@@ -88,7 +91,7 @@ def ensure_requirements(provision):
     if os.geteuid() != 0:
         command = ["sudo", "--", *command]
     run([*command, "update"])
-    packages = ["build-essential", "binutils", "pkg-config", "python3"]
+    packages = ["build-essential", "binutils", "pkg-config", "python3", "python3-reportlab"]
     if "glib-2.0" in MANIFEST["build_dependencies"]:
         packages.append("libglib2.0-dev")
     if "icu-i18n" in MANIFEST["build_dependencies"]:
@@ -173,20 +176,8 @@ def build_deb(profile, output, jobs):
         target.chmod(0o644)
         documentation = stage / DOCUMENTATION
         documentation.mkdir(parents=True)
-        for path in source_files():
-            if (path.parts[0] == "docs" or path.name.startswith(("LICENSE", "NOTICE", "COPYING"))
-                    or str(path) in {"README.md", "SOURCE.md", "SOURCE-MANIFEST.json"}):
-                copied = documentation / path
-                copied.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(ROOT / path, copied)
-                copied.chmod(0o644)
-        info = (f"Version: {VERSION}\nPackage version: {package_version}\nRepository: {REPOSITORY}\n"
-                f"Source revision: {revision()}\nArchitecture: {arch}\nProfile: {profile}\n"
-                f"C flags: {shlex.join(flags)}\nLTO: enabled\n"
-                f"PGO: {'trained two-pass profile' if profile == 'aggressive' else 'disabled'}\n"
-                f"Resource: /{RESOURCE}\nSHA256: {hashlib.sha256(target.read_bytes()).hexdigest()}\n"
-                "Checks: copy regression and model accuracy passed on final stripped module\n")
-        (documentation / "BUILD-INFO").write_text(info)
+        guide = documentation / (MANIFEST["name"] + ".pdf")
+        run([sys.executable, "packaging/build_guide.py", guide])
         control = stage / "DEBIAN"
         control.mkdir()
         (control / "control").write_text(
@@ -195,6 +186,12 @@ def build_deb(profile, output, jobs):
             f"Depends: {runtime_dependencies(library)}\n"
             "Replaces: infiltrator-calendar-resources\n"
             f"Homepage: https://github.com/Infiltrator-Projects/{REPOSITORY}\n"
+            f"X-Infiltrator-Source-Revision: {revision()}\n"
+            f"X-Infiltrator-Native-Profile: {profile}\n"
+            f"X-Infiltrator-LTO: enabled\n"
+            f"X-Infiltrator-PGO: {'trained-two-pass' if profile == 'aggressive' else 'disabled'}\n"
+            f"X-Infiltrator-Cflags: {shlex.join(flags)}\n"
+            f"X-Infiltrator-Resource-SHA256: {hashlib.sha256(target.read_bytes()).hexdigest()}\n"
             f"Description: {MANIFEST['name']} temporal resource\n"
             " Independently owned provider module for Infiltrator temporal consumers.\n")
         for directory, _, names in os.walk(stage):

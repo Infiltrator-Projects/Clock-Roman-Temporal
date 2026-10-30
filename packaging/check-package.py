@@ -23,23 +23,29 @@ with tempfile.TemporaryDirectory(prefix="provider-payload-") as temporary:
     root = Path(temporary)
     subprocess.run(["dpkg-deb", "--extract", package, root], check=True)
     files = [p for p in root.rglob("*") if not p.is_dir()]
+    assert len(files) == 2, [str(p.relative_to(root)) for p in files]
     assert sum(p.suffix == ".so" for p in files) == 1
+    guide = documentation / (manifest["name"] + ".pdf")
     for file in files:
         relative = file.relative_to(root)
         assert not file.is_symlink()
-        assert relative == resource or relative.is_relative_to(documentation), relative
+        assert relative in (resource, guide), relative
         assert file.stat().st_mode & 0o777 == 0o644, relative
     library = root / resource
-    info = (root / documentation / "BUILD-INFO").read_text()
-    assert f"Profile: {profile}\n" in info
-    assert "LTO: enabled\n" in info
-    assert f"SHA256: {hashlib.sha256(library.read_bytes()).hexdigest()}\n" in info
+    assert (root / guide).read_bytes().startswith(b"%PDF-")
+    def field(name):
+        return subprocess.check_output(["dpkg-deb", "-f", package, name], text=True).strip()
+    assert field("X-Infiltrator-Native-Profile") == profile
+    assert field("X-Infiltrator-LTO") == "enabled"
+    assert field("X-Infiltrator-Resource-SHA256") == hashlib.sha256(library.read_bytes()).hexdigest()
     if profile == "aggressive":
-        assert "PGO: trained two-pass profile\n" in info
-        assert "C flags: -O3 " in info
-        assert "-march=native" in info or "-mcpu=native" in info
+        assert field("X-Infiltrator-PGO") == "trained-two-pass"
+        assert field("X-Infiltrator-Cflags").startswith("-O3 ")
+        assert "-march=native" in field("X-Infiltrator-Cflags") or "-mcpu=native" in field("X-Infiltrator-Cflags")
     else:
-        assert "-march=native" not in info and "-mcpu=native" not in info
+        assert field("X-Infiltrator-PGO") == "disabled"
+        assert "-march=native" not in field("X-Infiltrator-Cflags")
+        assert "-mcpu=native" not in field("X-Infiltrator-Cflags")
     symbols = subprocess.check_output(["readelf", "--dyn-syms", "--wide", library], text=True)
     assert "__gcov" not in symbols, "Instrumented training binary leaked into package"
     env = dict(os.environ, LANGUAGE="en_US", LC_ALL="C.UTF-8")

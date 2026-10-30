@@ -16,8 +16,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          submodules: recursive
       - name: Install build prerequisites
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential binutils pkg-config libglib2.0-dev libicu-dev python3
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential binutils pkg-config libglib2.0-dev libicu-dev python3 python3-reportlab
       - name: Build and qualify the portable release and exact native installer
         shell: bash
         run: |
@@ -36,10 +38,17 @@ jobs:
           import hashlib, json, os
           from pathlib import Path
           manifest = json.loads(Path('SOURCE-MANIFEST.json').read_text())
-          info = (Path('/System/Resources/Documentation') / manifest['repository'] / 'BUILD-INFO').read_text()
-          assert 'Profile: aggressive\n' in info and 'PGO: trained two-pass profile\n' in info
           library = Path('/System/Resources') / ('Calendars' if manifest['kind'] == 'calendar' else 'Clocks') / (manifest['name'] + '.so')
-          assert 'SHA256: ' + hashlib.sha256(library.read_bytes()).hexdigest() + '\n' in info
+          guide = Path('/System/Resources/Documentation') / manifest['repository'] / (manifest['name'] + '.pdf')
+          assert guide.is_file() and guide.read_bytes().startswith(b'%PDF-')
+          assert not (guide.parent / 'BUILD-INFO').exists()
+          import subprocess
+          package = 'infiltrator-' + manifest['repository'].lower()
+          def field(key):
+              return subprocess.check_output(['dpkg-query', '-W', '-f=${' + key + '}', package], text=True).strip()
+          assert field('X-Infiltrator-Native-Profile') == 'aggressive'
+          assert field('X-Infiltrator-PGO') == 'trained-two-pass'
+          assert field('X-Infiltrator-Resource-SHA256') == hashlib.sha256(library.read_bytes()).hexdigest()
           paths = sorted(Path('dist').iterdir())
           assert len(paths) == 3
           contract = {'commit': os.environ['GITHUB_SHA'], 'version': Path('VERSION').read_text().strip(), 'name': manifest['name'],
@@ -61,6 +70,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          submodules: recursive
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: provider-qualified-${{ github.sha }}
