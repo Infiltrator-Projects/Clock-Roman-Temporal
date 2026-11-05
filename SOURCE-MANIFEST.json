@@ -236,8 +236,8 @@
   "common_dependency": {
     "type": "git-submodule",
     "path": "common",
-    "revision": "90c5b2c86afb7158e91794231ed970197aaf1e04",
-    "version": "1.19.80",
+    "revision": "a99ef676b0e43c7e645c81756e3fd38be0a54406",
+    "version": "1.19.81",
     "linkage": "static"
   }
 }

@@ -49,5 +49,5 @@ Each package owns only this provider and its passive documentation. Its `Replace
 ## Two-file installed documentation
 
 The native installation includes only this clock .so in /System/Resources/Clocks/
-and the illustrated PDF in /System/Resources/Documentation/Clock-Roman-Temporal/.
+and the illustrated PDF in /System/Resources/Documentation/Clock-Roman-Temporal.pdf.
 Engineering records remain in GitHub; build metadata stays in dpkg control.

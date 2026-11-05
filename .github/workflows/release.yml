@@ -38,7 +38,7 @@ jobs:
           name=$(jq -r '.name' SOURCE-MANIFEST.json)
           repo=$(jq -r '.repository' SOURCE-MANIFEST.json)
           test -f "/System/Resources/Clocks/$name.so"
-          test -f "/System/Resources/Documentation/$repo/$name.pdf"
+          test -f "/System/Resources/Documentation/$repo.pdf"
           test "$(dpkg-query -W -f='${X-Infiltrator-PGO}' "$package")" = 'trained-two-pass'
           test "$(dpkg-query -W -f='${X-Infiltrator-Resource-SHA256}' "$package")" = "$(sha256sum "/System/Resources/Clocks/$name.so" | cut -d' ' -f1)"
           test "$(find dist -maxdepth 1 -type f | wc -l)" -eq 3
