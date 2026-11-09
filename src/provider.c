@@ -205,23 +205,10 @@ static bool mode_location_valid(const InfiltratrTemporalClockModeInfo *info,
 }
 
 
-/* Names are transliterated proper names, not animal/help labels. Wording
- * belongs to the selected language; the shared phase calculation stays below. */
+/* Locale-specific labels; the shared seasonal-period calculations are below. */
 #define CLOCK_REMAINING_WORDS(hour, watch, twelfth, twelfths) \
     { "hour", hour }, { "watch", watch }, \
     { "twelfth", twelfth }, { "twelfths", twelfths }
-#define JAPANESE_BRANCHES \
-    { "jp-ne", "Ne" }, { "jp-ushi", "Ushi" }, { "jp-tora", "Tora" }, \
-    { "jp-u", "U" }, { "jp-tatsu", "Tatsu" }, { "jp-mi", "Mi" }, \
-    { "jp-uma", "Uma" }, { "jp-hitsuji", "Hitsuji" }, { "jp-saru", "Saru" }, \
-    { "jp-tori", "Tori" }, { "jp-inu", "Inu" }, { "jp-i", "I" }
-#define JAPANESE_NATIVE_BRANCHES \
-    { "jp-ne", "子" }, { "jp-ushi", "丑" }, { "jp-tora", "寅" }, \
-    { "jp-u", "卯" }, { "jp-tatsu", "辰" }, { "jp-mi", "巳" }, \
-    { "jp-uma", "午" }, { "jp-hitsuji", "未" }, { "jp-saru", "申" }, \
-    { "jp-tori", "酉" }, { "jp-inu", "戌" }, { "jp-i", "亥" }
-#define EDO_WORDS(horizontal, vertical) \
-    { "edo", horizontal }, { "edo-vertical", vertical }
 static const InfiltratrI18nEntry clock_en[] = {
     CLOCK_REMAINING_WORDS("Hour", "Watch", "twelfth", "twelfths"),
 
@@ -268,9 +255,6 @@ static const InfiltratrI18nEntry clock_zh_hant[] = {
 };
 
 #undef CLOCK_REMAINING_WORDS
-#undef JAPANESE_BRANCHES
-#undef JAPANESE_NATIVE_BRANCHES
-#undef EDO_WORDS
 
 #define CLOCK_CATALOG(locale, entries) \
     { locale, entries, sizeof(entries) / sizeof((entries)[0]) }
@@ -302,7 +286,6 @@ static bool format_clock_mode(const InfiltratrI18n *language,
                                            size_t capacity,
                                            size_t *length)
 {
-    (void)mode;
     const InfiltratrTemporalClockModeInfo *info;
 
     // The extension modes use absolute instants and, when applicable, the
@@ -368,14 +351,6 @@ static bool format_clock_mode(const InfiltratrI18n *language,
                 period.daylight ? "hour" : "watch")
                 : (period.daylight ? "Hora" : "Vigilia"), roman[period.index]));
     }
-
-    ;
-
-    ;
-
-    ;
-
-    return false;
 }
 
 static bool seasonal_format_clock_mode(const char *mode,
@@ -384,7 +359,6 @@ static bool seasonal_format_clock_mode(const char *mode,
     double latitude, double longitude,
     char *buffer, size_t capacity, size_t *length)
 {
-    (void)mode;
     return format_clock_mode(NULL, mode, unix_microseconds, utc_offset_seconds,
         show_seconds, vertical, location_configured, latitude, longitude,
         buffer, capacity, length);
@@ -397,7 +371,6 @@ static bool seasonal_format_clock_mode_localized(
     double latitude, double longitude,
     char *buffer, size_t capacity, size_t *length)
 {
-    (void)mode;
     InfiltratrI18n language;
     if (!infiltratr_i18n_init(&language, clock_catalogs,
             sizeof(clock_catalogs) / sizeof(clock_catalogs[0]), "en")) {
