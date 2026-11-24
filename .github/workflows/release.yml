@@ -19,7 +19,7 @@ jobs:
         with:
           submodules: recursive
       - name: Install native build prerequisites
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential binutils pkg-config libglib2.0-dev libicu-dev jq ghostscript zip
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends build-essential binutils pkg-config libglib2.0-dev libicu-dev jq ghostscript git
       - name: Forbid Python source and validate native artefacts
         shell: bash
         run: |
@@ -41,8 +41,8 @@ jobs:
           test -f "/System/Resources/Documentation/$repo.pdf"
           test "$(dpkg-query -W -f='${X-Infiltrator-PGO}' "$package")" = 'trained-two-pass'
           test "$(dpkg-query -W -f='${X-Infiltrator-Resource-SHA256}' "$package")" = "$(sha256sum "/System/Resources/Clocks/$name.so" | cut -d' ' -f1)"
-          test "$(find dist -maxdepth 1 -type f | wc -l)" -eq 3
-          jq -n --arg sha "$GITHUB_SHA" --arg version "$(cat VERSION)" --arg name "$name" --slurpfile assets <(for f in dist/*.deb dist/*.run dist/*.zip; do jq -n --arg file "$(basename "$f")" --arg hash "$(sha256sum "$f" | cut -d' ' -f1)" '{($file):$hash}'; done | jq -s 'add') \
+          test "$(find dist -maxdepth 1 -type f | wc -l)" -eq 2
+          jq -n --arg sha "$GITHUB_SHA" --arg version "$(cat VERSION)" --arg name "$name" --slurpfile assets <(for f in dist/*.deb dist/*.run; do jq -n --arg file "$(basename "$f")" --arg hash "$(sha256sum "$f" | cut -d' ' -f1)" '{($file):$hash}'; done | jq -s 'add') \
             '{commit:$sha,version:$version,name:$name,assets:$assets[0]}' > dist/contract.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
