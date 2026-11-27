@@ -37,6 +37,6 @@ The model and boundary above are documented from the current resource build map,
 - [Historical fidelity audit](https://github.com/Infiltrator-Projects/Libraries/blob/main/docs/TEMPORAL_HISTORICAL_FIDELITY.md)
 - [Temporal discovery and executable provider ABI](https://github.com/Infiltrator-Projects/Libraries/blob/main/docs/TEMPORAL_PROVIDERS.md)
 
-## Source copy status
+## Source provenance
 
-The model-specific implementation and required helpers are now copied into this repository. Its behaviour was compared with the original Common 1.19.78 provider; this adds copy-regression evidence, not a new independent historical audit. See [source provenance](../SOURCE.md) and [validation results](../VALIDATION-RESULTS.json). The original Common implementation remains in place.
+The original Common 1.19.78 extraction is historical evidence. Current builds use the authoritative pinned Common submodule. See [source record](../SOURCE.md) and [recorded results](../VALIDATION-RESULTS.json). The operational model, worked examples and limitations are maintained in [GUIDE.json](GUIDE.json).
