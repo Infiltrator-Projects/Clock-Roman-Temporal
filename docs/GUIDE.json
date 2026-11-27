@@ -5,10 +5,11 @@
   "example": "For an illustrative 15-hour day, each temporal hour is 75 ordinary minutes. 37.5 minutes into the first hour is Hour I, VI twelfths. The nine-hour night divides into four watches of 135 minutes each.",
   "history": "Roman daylight horae were seasonal; the selected night convention uses four vigiliae. Other Roman historical contexts used different divisions, which are not all represented by this model.",
   "model": "Compute apparent solar phase and dawn/dusk from compact solar geometry using a 0.833-degree horizon correction. Select the day or wrapped night span, scale position into twelve or four parts and floor the period index. Fine daylight mode floors the fractional position times twelve, omitting a zero fraction. Labels are localised; scheduling searches for the next visible change.",
-  "limits": "Requires valid latitude and longitude. If no solar crossing exists, display N/A rather than inventing a seasonal hour. The model is approximate, not a reconstruction of every historical Roman locality or observed water clock.",
+  "limits": "Requires valid latitude and longitude. If no solar crossing exists, display N/A rather than inventing a seasonal hour. The model is approximate, not a reconstruction of every historical Roman locality or observed water clock. The solar model assumes an idealised sea-level horizon and standard depression; local terrain and weather are not modelled.",
   "sources": [
     "Implementation: https://github.com/Infiltrator-Projects/Clock-Roman-Temporal/blob/main/src/provider.c",
     "Model evidence: https://github.com/Infiltrator-Projects/Clock-Roman-Temporal/blob/main/docs/MODEL.md",
-    "Shared contract: https://github.com/Infiltrator-Projects/Libraries/blob/main/docs/TEMPORAL_PROVIDERS.md"
+    "Shared contract: https://github.com/Infiltrator-Projects/Libraries/blob/main/docs/TEMPORAL_PROVIDERS.md",
+    "Historical qualification: https://github.com/Infiltrator-Projects/Clock-Roman-Temporal/blob/main/docs/FORENSIC-AUDIT.md"
   ]
 }
